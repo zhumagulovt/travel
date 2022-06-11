@@ -59,7 +59,6 @@ class ActivationSerializer(serializers.Serializer):
 
     def activate_user(self):
         email = self.validated_data.get('email')
-
         user = User.objects.get(email=email)
         user.activation_code = ""
         user.is_active = True

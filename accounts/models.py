@@ -9,7 +9,7 @@ from django.dispatch import receiver
 from django.urls import reverse
 from django.conf import settings
 
-from django_rest_passwordreset.signals import reset_password_token_created
+from django_rest_passwordreset.signals import reset_password_token_created, post_password_reset
 
 
 class UserManager(BaseUserManager):
@@ -80,9 +80,11 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
 
     send_mail(
         'Сброс пароля',
-        email_plaintext_message,
+        reset_password_token.key,
         settings.EMAIL_HOST_USER,
         [reset_password_token.user.email]
         )
 
-post_save.connect(User.user_saved, sender=User)
+@receiver(post_password_reset)
+def password_reset_post(user, *args, **kwargs):
+    user.auth_token.delete()
