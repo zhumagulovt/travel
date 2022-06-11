@@ -38,10 +38,14 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class TourDetailSerializer(serializers.ModelSerializer):
     average_rating = serializers.SerializerMethodField(read_only=True)
+    images = serializers.SerializerMethodField(read_only=True)
     comments = CommentSerializer(many=True)
 
     def get_average_rating(self, obj):
         return obj.ratings.aggregate(Avg('rating'))
+
+    def get_images(self, obj):
+        return obj.images.values('image')
 
     class Meta:
         model = Tour
@@ -54,5 +58,6 @@ class TourDetailSerializer(serializers.ModelSerializer):
             'start_date',
             'end_date',
             'average_rating',
+            'images',
             'comments'
         ]

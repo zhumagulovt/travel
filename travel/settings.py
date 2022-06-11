@@ -40,8 +40,10 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework.authtoken',
-    'accounts',
+    # 'rest_framework_swagger',
     'django_rest_passwordreset',
+    'drf_yasg',
+    'accounts',
     'tours'
 ]
 
@@ -150,12 +152,12 @@ REST_FRAMEWORK = {
     ]
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-EMAIL_HOST = 'smtp.mailtrap.io'
-EMAIL_HOST_USER = 'b2605ad562e060'
-EMAIL_HOST_PASSWORD = 'f7eb7036bf3c96'
-EMAIL_PORT = '2525'
+EMAIL_HOST = ''
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = ''
 
 
 MEDIA_URL = '/media/'
