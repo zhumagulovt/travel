@@ -26,10 +26,16 @@ class Rating(models.Model):
     user = models.ForeignKey(User, related_name="ratings", on_delete=models.CASCADE)
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
 
+    class Meta:
+        unique_together = ['tour', 'user']
+
 
 class Saved(models.Model):
     tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name="saved", on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ['tour', 'user']
 
 
 class Comment(models.Model):
