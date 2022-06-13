@@ -10,6 +10,7 @@ class TourImageAdmin(admin.StackedInline):
 
 @admin.register(Tour)
 class TourAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'price', 'start_date', 'end_date']
     inlines = [TourImageAdmin]
 
 

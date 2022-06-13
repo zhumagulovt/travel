@@ -26,7 +26,7 @@ class TourSerializer(serializers.ModelSerializer):
 
 
 class RatingSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    user = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Rating
@@ -34,7 +34,7 @@ class RatingSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    user = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Comment
@@ -72,16 +72,8 @@ class TourDetailSerializer(serializers.ModelSerializer):
 
 
 class SavedSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    user = serializers.StringRelatedField(read_only=True)
     tour = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         model = Saved
         fields = "__all__"
-
-
-# class SavedSerializer(serializers.ModelSerializer):
-#     user = serializers.PrimaryKeyRelatedField(read_only=True)
-    
-#     class Meta:
-#         model = Saved
-#         fields = "__all__"

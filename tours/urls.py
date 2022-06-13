@@ -6,6 +6,6 @@ from .routers import router
 urlpatterns = [
     path('tours/', views.TourListView.as_view()),
     path('tours/<int:pk>/', views.TourDetail.as_view()),
-    path('tours/<int:pk>/saved/', views.SavedRetrieve.as_view()),
+    path('tours/<int:pk>/saved/', views.SavedView.as_view()),
     path('tours/', include(router.urls)),
 ]

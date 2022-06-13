@@ -4,10 +4,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
+from rest_framework.generics import ListAPIView
 
 from .serializers import RegistrationSerializer, ActivationSerializer,\
-    LoginSerializer, PasswordChangeSerializer
-from .models import User
+    LoginSerializer, PasswordChangeSerializer, SavedTourSerializer
+
+from tours.models import Tour
 
 
 class RegistrationView(APIView):
@@ -67,6 +69,17 @@ class PasswordChangeView(APIView):
             "Пароль изменен", 
             status=status.HTTP_200_OK
         )
+
+
+class SavedView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = SavedTourSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        saved = user.saved.values('tour_id')
+        queryset = Tour.objects.filter(id__in=saved)
+        return queryset
 
 
 @api_view(['GET'])

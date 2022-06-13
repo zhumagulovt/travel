@@ -6,6 +6,8 @@ from rest_framework import serializers
 
 from .models import User
 
+from tours.models import Tour
+
 
 class RegistrationSerializer(serializers.ModelSerializer):
 
@@ -106,4 +108,8 @@ class PasswordChangeSerializer(serializers.Serializer):
         
         return data
 
-        
+
+class SavedTourSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tour
+        fields = "__all__"
