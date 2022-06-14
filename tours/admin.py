@@ -10,10 +10,14 @@ class TourImageAdmin(admin.StackedInline):
 
 @admin.register(Tour)
 class TourAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'price', 'start_date', 'end_date']
+    list_display = ['id', 'name', 'price', 'company', 'start_date', 'end_date']
+    list_display_links = ['id', 'name']
     inlines = [TourImageAdmin]
 
 
-admin.site.register(Rating)
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
+    list_display = ['id', 'tour', 'user', 'rating']
+
 admin.site.register(Saved)
 admin.site.register(Comment)

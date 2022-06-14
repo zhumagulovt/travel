@@ -33,6 +33,16 @@ class RatingSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class RatingUpdateSerializer(serializers.ModelSerializer):
+    # tour = serializers.PrimaryKeyRelatedField(read_only=True)
+    # user = serializers.StringRelatedField(read_only=True)
+    class Meta:
+        model = Rating
+        fields = [
+            "rating"
+        ]
+
+
 class CommentSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
 

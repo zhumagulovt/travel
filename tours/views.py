@@ -6,9 +6,11 @@ from rest_framework.viewsets import GenericViewSet
 
 from django_filters import rest_framework as filters
 
+from accounts import serializers
+
 from .models import Tour, Comment, Rating, Saved
 from .serializers import TourSerializer, TourDetailSerializer, \
-    CommentSerializer, RatingSerializer, SavedSerializer
+    CommentSerializer, RatingSerializer, RatingUpdateSerializer, SavedSerializer
 from .permissions import IsOwnerOrReadOnly
 
 
@@ -58,7 +60,6 @@ class RatingViewSet(mixins.CreateModelMixin,
     serializer_class = RatingSerializer
 
     def get_object(self):
-        print(self.kwargs)
         return get_object_or_404(
             Rating, 
             tour_id=self.kwargs['pk'],
@@ -67,6 +68,11 @@ class RatingViewSet(mixins.CreateModelMixin,
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+    
+    def get_serializer_class(self):
+        if self.action == "update":
+            return RatingUpdateSerializer
+        return super().get_serializer_class()
 
 
 class SavedView(mixins.CreateModelMixin,
@@ -83,7 +89,7 @@ class SavedView(mixins.CreateModelMixin,
             Saved, 
             tour_id=self.kwargs['pk'], 
             user=self.request.user
-            )
+        )
     
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
