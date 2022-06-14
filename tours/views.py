@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.utils.timezone import now
 
 from rest_framework import generics, mixins
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
@@ -6,7 +7,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from django_filters import rest_framework as filters
 
-from .models import Tour, Comment, Rating, Saved, TourHistory
+from .models import Tour, Comment, Rating, Saved, UserTourViewed
 from .serializers import TourSerializer, TourDetailSerializer, \
     CommentSerializer, RatingSerializer, RatingUpdateSerializer, SavedSerializer
 from .permissions import IsOwnerOrReadOnly
@@ -36,13 +37,17 @@ class TourDetail(generics.RetrieveAPIView):
 
     def get_object(self):
         obj = super().get_object()
-        user = self.request.user
-        if user.is_authenticated:
-            if not TourHistory.objects.filter(tour=obj,user=user).exists():
-                TourHistory.objects.create(
-                    tour=obj,user=user
-                    )
+        self.user_viewed(obj, now())
         return obj
+    
+    def user_viewed(self, obj, timestamp):
+        user = self.request.user
+        if not user.is_authenticated:
+            return
+        tour_view, _ = UserTourViewed.objects.get_or_create(user=user, tour=obj)
+        tour_view.timestamp = timestamp
+        tour_view.save()
+        return tour_view
 
 
 class CommentViewSet(mixins.CreateModelMixin,

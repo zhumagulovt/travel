@@ -78,8 +78,9 @@ class SavedView(ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        saved = user.saved.values('tour_id')
-        queryset = Tour.objects.filter(id__in=saved)
+        queryset = Tour.objects.filter(
+            saved__user=user
+        )
         return queryset
 
 
@@ -89,8 +90,10 @@ class ToursHistoryView(ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        history_tours = user.tours_history.values('tour_id')
-        queryset = Tour.objects.filter(id__in=history_tours)
+        queryset = Tour.objects.filter(
+            viewed__user=user
+        ).order_by("-viewed__timestamp")
+
         return queryset
 
 

@@ -21,9 +21,10 @@ class TourImage(models.Model):
     image = models.ImageField(upload_to="images/", blank=True, null=True)
 
 
-class TourHistory(models.Model):
-    tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, related_name="tours_history", on_delete=models.CASCADE)
+class UserTourViewed(models.Model):
+    tour = models.ForeignKey(Tour, related_name="viewed", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name="viewed", on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(blank=True, null=True)
 
 
 class Rating(models.Model):
@@ -36,7 +37,7 @@ class Rating(models.Model):
 
 
 class Saved(models.Model):
-    tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
+    tour = models.ForeignKey(Tour, related_name="saved", on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name="saved", on_delete=models.CASCADE)
 
     class Meta:

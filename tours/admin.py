@@ -22,4 +22,4 @@ class RatingAdmin(admin.ModelAdmin):
 
 admin.site.register(Saved)
 admin.site.register(Comment)
-admin.site.register(TourHistory)
+admin.site.register(UserTourViewed)
