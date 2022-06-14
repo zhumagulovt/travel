@@ -19,5 +19,7 @@ class TourAdmin(admin.ModelAdmin):
 class RatingAdmin(admin.ModelAdmin):
     list_display = ['id', 'tour', 'user', 'rating']
 
+
 admin.site.register(Saved)
 admin.site.register(Comment)
+admin.site.register(TourHistory)

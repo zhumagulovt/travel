@@ -6,9 +6,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from django_filters import rest_framework as filters
 
-from accounts import serializers
-
-from .models import Tour, Comment, Rating, Saved
+from .models import Tour, Comment, Rating, Saved, TourHistory
 from .serializers import TourSerializer, TourDetailSerializer, \
     CommentSerializer, RatingSerializer, RatingUpdateSerializer, SavedSerializer
 from .permissions import IsOwnerOrReadOnly
@@ -35,6 +33,16 @@ class TourListView(generics.ListAPIView):
 class TourDetail(generics.RetrieveAPIView):
     queryset = Tour.objects.all()
     serializer_class = TourDetailSerializer
+
+    def get_object(self):
+        obj = super().get_object()
+        user = self.request.user
+        if user.is_authenticated:
+            if not TourHistory.objects.filter(tour=obj,user=user).exists():
+                TourHistory.objects.create(
+                    tour=obj,user=user
+                    )
+        return obj
 
 
 class CommentViewSet(mixins.CreateModelMixin,

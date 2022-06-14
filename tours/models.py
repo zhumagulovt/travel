@@ -21,6 +21,11 @@ class TourImage(models.Model):
     image = models.ImageField(upload_to="images/", blank=True, null=True)
 
 
+class TourHistory(models.Model):
+    tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name="tours_history", on_delete=models.CASCADE)
+
+
 class Rating(models.Model):
     tour = models.ForeignKey(Tour, related_name="ratings", on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name="ratings", on_delete=models.CASCADE)

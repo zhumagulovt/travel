@@ -10,6 +10,7 @@ from .serializers import RegistrationSerializer, ActivationSerializer,\
     LoginSerializer, PasswordChangeSerializer, SavedTourSerializer
 
 from tours.models import Tour
+from tours.serializers import TourSerializer
 
 
 class RegistrationView(APIView):
@@ -73,12 +74,23 @@ class PasswordChangeView(APIView):
 
 class SavedView(ListAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = SavedTourSerializer
+    serializer_class = TourSerializer
 
     def get_queryset(self):
         user = self.request.user
         saved = user.saved.values('tour_id')
         queryset = Tour.objects.filter(id__in=saved)
+        return queryset
+
+
+class ToursHistoryView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = TourSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        history_tours = user.tours_history.values('tour_id')
+        queryset = Tour.objects.filter(id__in=history_tours)
         return queryset
 
 
