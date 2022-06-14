@@ -2,12 +2,12 @@ from random import choice
 import string
 
 from django.db import models
-from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.mail import send_mail
 from django.dispatch import receiver
-from django.urls import reverse
 from django.conf import settings
+
+from rest_framework.authtoken.models import Token
 
 from django_rest_passwordreset.signals import reset_password_token_created, post_password_reset
 
@@ -61,11 +61,6 @@ class User(AbstractBaseUser):
         l = "".join([choice(string.ascii_lowercase + string.digits) for i in range(6)])
         self.activation_code = l
         self.save()
-    
-    @classmethod
-    def user_saved(cls, sender, instance, **kwargs):
-        if getattr(instance, '_set_password', False):
-            instance.auth_token.delete()
 
     class Meta:
         verbose_name = "Пользователь"
@@ -74,9 +69,6 @@ class User(AbstractBaseUser):
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
-
-    email_plaintext_message = "{}?token={}".format(
-        reverse('password_reset:reset-password-request'), reset_password_token.key)
 
     send_mail(
         'Сброс пароля',
@@ -87,4 +79,6 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
 
 @receiver(post_password_reset)
 def password_reset_post(user, *args, **kwargs):
-    user.auth_token.delete()
+    is_tokened = Token.objects.filter(user=user).exists()
+    if is_tokened:
+        user.auth_token.delete()
